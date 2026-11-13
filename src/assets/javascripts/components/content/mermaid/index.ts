@@ -37,6 +37,7 @@ import { h } from "~/utilities"
 import { Component } from "../../_"
 
 import themeCSS from "./index.css"
+import { zoomMermaid } from "./zoom"
 
 /* ----------------------------------------------------------------------------
  * Types
@@ -130,6 +131,18 @@ export function mountMermaid(
     // Replace code block with diagram and bind functions
     el.replaceWith(host)
     bindFunctions?.(shadow)
+
+    // Open diagram in full-screen view with pan and zoom
+    host.setAttribute("role", "button")
+    host.setAttribute("tabindex", "0")
+    host.style.cursor = "zoom-in"
+    host.addEventListener("click", () => zoomMermaid(shadow))
+    host.addEventListener("keydown", ev => {
+      if (ev.key === "Enter" || ev.key === " ") {
+        ev.preventDefault()
+        zoomMermaid(shadow)
+      }
+    })
   })
 
   // Create and return component
